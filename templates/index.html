@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DiaSure AI</title>
+    <style>
+        body { font-family: Arial; background: #f4f6f8; padding: 30px; }
+        .box { background: white; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; }
+        input, textarea, button { width: 100%; padding: 10px; margin-top: 10px; }
+        button { background: #0b5ed7; color: white; border: none; }
+        pre { white-space: pre-wrap; background: #eef; padding: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+<h2>AI Diabetes Assistant</h2>
+
+<form method="post">
+    <input name="fasting" placeholder="Fasting Sugar (mg/dL)" required>
+    <input name="post_meal" placeholder="Post-meal Sugar (mg/dL)" required>
+    <input name="age" placeholder="Age" required>
+    <input name="gender" placeholder="Gender" required>
+    <input name="height" placeholder="Height (cm)" required>
+    <input name="weight" placeholder="Weight (kg)" required>
+    <textarea name="sugars" placeholder="Enter last 7 days sugar values (comma separated)" required></textarea>
+    <button type="submit">Generate My Plan</button>
+</form>
+
+{% if response %}
+<h3>Your AI Guidance</h3>
+<pre>{{ response }}</pre>
+{% endif %}
+
+</div>
+
+</body>
+</html>
