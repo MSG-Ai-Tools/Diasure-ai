@@ -3,90 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiaSure AI - Diabetes Guidance Tool</title>
-    <!-- Google Fonts -->
+    <title>DiaSure AI — Diabetes Insight & Food Guidance</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Reset & Base */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #eef2f7; color: #1f2937; }
+        body { background: #F9FAFB; color: #1F2937; }
 
-        /* Container */
         .container {
-            max-width: 700px;
-            margin: 50px auto;
-            background: #fff;
-            padding: 40px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 30px;
         }
 
-        /* Title */
+        .card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 30px 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
         h1 {
-            text-align: center;
-            color: #2d6cdf;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 25px;
+            text-align: center;
+            color: #2563EB;
+            margin-bottom: 10px;
         }
 
-        /* Form styling */
-        form label {
+        .subtitle {
+            text-align: center;
+            font-weight: 500;
+            color: #4B5563;
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+
+        label {
             display: block;
-            margin-top: 18px;
             font-weight: 600;
+            margin-top: 18px;
             color: #374151;
         }
 
-        form input, form select, form button {
+        input, select, button {
             width: 100%;
             padding: 12px 15px;
             margin-top: 6px;
             border-radius: 10px;
-            border: 1px solid #d1d5db;
-            font-size: 1rem;
-            transition: all 0.2s ease-in-out;
+            border: 1px solid #D1D5DB;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
 
-        form input:focus, form select:focus {
+        input:focus, select:focus {
+            border-color: #2563EB;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
             outline: none;
-            border-color: #2d6cdf;
-            box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.2);
         }
 
-        /* Button */
-        form button {
-            background: linear-gradient(90deg, #2d6cdf, #1c4fa3);
+        button {
+            background: #2563EB;
             color: #fff;
             border: none;
-            margin-top: 25px;
             font-weight: 700;
+            margin-top: 24px;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        form button:hover {
-            background: linear-gradient(90deg, #1c4fa3, #164081);
+        button:hover {
+            background: #1E40AF;
         }
 
-        /* Result box */
         .result {
-            margin-top: 30px;
-            background: #e0f2fe;
-            border-left: 5px solid #2d6cdf;
+            margin-top: 28px;
+            background: #E0F2FE;
+            border-left: 5px solid #2563EB;
+            border-radius: 8px;
             padding: 20px;
-            border-radius: 10px;
+            font-size: 0.96rem;
+            line-height: 1.55;
+            color: #1E3A8A;
             white-space: pre-wrap;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #1e3a8a;
         }
 
-        /* Trust badge */
         .trust {
             margin-top: 25px;
             text-align: center;
-            font-size: 0.9rem;
-            color: #6b7280;
+            font-size: 0.88rem;
+            color: #6B7280;
         }
 
         .trust span {
@@ -94,67 +99,76 @@
             color: #111827;
         }
 
-        /* Footer */
         footer {
             text-align: center;
-            margin-top: 40px;
-            font-size: 0.8rem;
-            color: #9ca3af;
+            margin: 40px 0 15px;
+            font-size: 0.82rem;
+            color: #9CA3AF;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+            .subtitle { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>DiaSure AI</h1>
-        <p style="text-align:center; color:#374151; margin-bottom:20px;">
-            Get instant, personalized diabetes guidance and food recommendations. Safe, trusted, and backed by AI technology.
-        </p>
+        <div class="card">
+            <h1>DiaSure AI</h1>
+            <p class="subtitle">
+                Get instant, accurate insight into your blood sugar — plus daily food guidance that helps you stay balanced.
+            </p>
 
-        <form method="POST">
-            <label for="sugar">Blood Sugar Level (mg/dL)</label>
-            <input type="number" name="sugar" id="sugar" placeholder="e.g., 110" required min="1">
+            <form method="POST">
 
-            <label for="timing">Timing</label>
-            <select name="timing" id="timing" required>
-                <option value="">Select</option>
-                <option value="Fasting">Fasting</option>
-                <option value="Post-meal">Post-meal</option>
-                <option value="Random">Random</option>
-            </select>
+                <label for="sugar">Blood Sugar Level (mg/dL)</label>
+                <input type="number" name="sugar" id="sugar" placeholder="e.g., 120" required min="1">
 
-            <label for="age">Age</label>
-            <input type="number" name="age" id="age" placeholder="e.g., 45" min="1">
+                <label for="timing">When was this taken?</label>
+                <select name="timing" id="timing" required>
+                    <option value="">Select</option>
+                    <option value="Fasting">Fasting</option>
+                    <option value="Post-meal">Post-meal</option>
+                    <option value="Random">Random</option>
+                </select>
 
-            <label for="gender">Gender</label>
-            <select name="gender" id="gender">
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
+                <label for="age">Your age</label>
+                <input type="number" name="age" id="age" placeholder="e.g., 45">
 
-            <label for="height">Height (cm)</label>
-            <input type="number" name="height" id="height" placeholder="e.g., 170" min="1">
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender">
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
 
-            <label for="weight">Weight (kg)</label>
-            <input type="number" name="weight" id="weight" placeholder="e.g., 70" min="1">
+                <label for="height">Height (cm)</label>
+                <input type="number" name="height" id="height" placeholder="e.g., 170">
 
-            <button type="submit">Get My Guidance</button>
-        </form>
+                <label for="weight">Weight (kg)</label>
+                <input type="number" name="weight" id="weight" placeholder="e.g., 70">
 
-        {% if result %}
-        <div class="result">
-            {{ result }}
-        </div>
-        {% endif %}
+                <button type="submit">Get My Insight + Guidance</button>
 
-        <div class="trust">
-            <p>🔒 Safe & Secure | AI-Powered | <span>Trusted Guidance Only</span></p>
+            </form>
+
+            {% if result %}
+            <div class="result">
+                {{ result }}
+            </div>
+            {% endif %}
+
+            <div class="trust">
+                🔒 <span>AI-Enhanced Guidance</span> • Educational • Not a Medical Diagnosis
+            </div>
         </div>
     </div>
 
     <footer>
-        &copy; 2026 DiaSure AI. This tool provides educational guidance and is not a substitute for professional medical advice.
+        &copy; 2026 DiaSure AI — Educational guidance only. Not a substitute for professional care.
     </footer>
 </body>
 </html>
