@@ -2,199 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DiaSure AI — Futuristic Diabetes Guidance</title>
+<title>DiaSure AI</title>
 
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif; }
+:root {
+  --bg-dark: #0b1220;
+  --card: rgba(255,255,255,0.08);
+  --neon: #2fffdc;
+  --teal: #1fb6aa;
+  --text: #eaf0f6;
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+}
 
 body {
-    background: radial-gradient(circle at 20% 30%, #0f0c29, #302b63, #24243e);
-    color: #fff;
-    min-height:100vh;
+  margin: 0;
+  background: radial-gradient(circle at top, #101c3a, #060b18);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.container { max-width: 750px; margin:50px auto; padding:0 20px; }
-
-/* Futuristic DiaSure logo */
-h1 {
-    font-family:'Orbitron', sans-serif;
-    font-size:3rem;
-    text-align:center;
-    background: linear-gradient(90deg, #00ffff, #ff00ff, #ffcc00, #00ff99);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientMove 6s linear infinite;
-    margin-bottom:10px;
-    text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+.app {
+  width: 420px;
+  background: var(--card);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 40px rgba(47,255,220,0.15);
 }
 
-@keyframes gradientMove {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+.logo {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--neon);
+  margin-bottom: 5px;
 }
 
 .subtitle {
-    text-align:center;
-    font-weight:500;
-    color:#a0a0a0;
-    margin-bottom:40px;
-    font-size:1rem;
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 25px;
 }
 
-/* Card container */
-.card {
-    background: rgba(30,30,40,0.95);
-    border-radius: 25px;
-    padding: 40px 35px;
-    box-shadow: 0 0 40px rgba(0,255,255,0.3), 0 0 80px rgba(255,0,255,0.2);
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 15px;
 }
 
-/* Input Fields */
-.input-group { position: relative; margin-top:20px; }
-.input-group i { position:absolute; left:15px; top:50%; transform:translateY(-50%); color:#00ffff; font-size:1rem; }
-input, select {
-    width:100%;
-    padding:12px 15px 12px 40px;
-    border-radius:12px;
-    border:none;
-    background: rgba(255,255,255,0.05);
-    color:#fff;
-    font-size:0.95rem;
-    transition: all 0.3s ease;
-}
-input:focus, select:focus { outline:none; box-shadow: 0 0 20px #00ffff; }
-
-/* Neon Button */
 button {
-    background: linear-gradient(90deg, #00ffff, #ff00ff, #ffcc00);
-    color:#000;
-    border:none;
-    font-weight:700;
-    margin-top:25px;
-    padding:15px;
-    width:100%;
-    border-radius:20px;
-    font-size:1.1rem;
-    cursor:pointer;
-    transition: all 0.4s ease;
-    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--teal), var(--neon));
+  border: none;
+  border-radius: 14px;
+  color: #002;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
 }
+
 button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00ff, 0 0 90px #ffcc00;
+  transform: scale(1.02);
 }
 
-/* Result Pop-up */
-.result {
-    margin-top:30px;
-    background: rgba(0,255,255,0.05);
-    border-left:6px solid #00ffff;
-    border-radius:15px;
-    padding:25px;
-    font-size:1rem;
-    line-height:1.6;
-    white-space: pre-wrap;
-    opacity:0;
-    transform:translateY(-30px);
-    transition: all 0.8s ease;
-    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
 }
 
-.result.show {
-    opacity:1;
-    transform:translateY(0);
+.modal-content {
+  background: #0e1730;
+  padding: 25px;
+  width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 18px;
+  animation: pop 0.4s ease;
 }
 
-/* Disclaimer style inside result */
-.result strong[style*="color:red"] {
-    color:#ff4444;
-    text-shadow: 0 0 5px #ff4444;
+@keyframes pop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-/* Trust text */
-.trust {
-    margin-top:25px;
-    text-align:center;
-    font-size:0.88rem;
-    color:#a0a0a0;
-}
-.trust span { font-weight:600; color:#fff; }
-
-footer {
-    text-align:center;
-    margin:50px 0 15px;
-    font-size:0.82rem;
-    color:#888;
+.close {
+  float: right;
+  cursor: pointer;
+  color: var(--neon);
 }
 
-/* Responsive */
-@media (max-width:480px){
-    h1 { font-size:2.2rem; }
-    .subtitle { font-size:0.9rem; }
+.result span.heading {
+  color: var(--neon);
+  font-weight: 700;
+}
+
+.result span.disclaimer {
+  color: red;
+  font-weight: 800;
 }
 </style>
-
-<script>
-window.addEventListener('DOMContentLoaded', () => {
-    const res = document.querySelector('.result');
-    if(res && res.innerHTML.trim() !== "") {
-        setTimeout(() => { res.classList.add('show'); }, 100);
-    }
-});
-</script>
 </head>
+
 <body>
-<div class="container">
-    <h1>DiaSure</h1>
-    <p class="subtitle">AI-powered futuristic diabetes guidance & daily tips</p>
 
-    <div class="card">
-        <form method="POST">
-            <div class="input-group"><i class="fas fa-droplet"></i>
-                <input type="number" name="sugar" placeholder="Blood Sugar (mg/dL)" required min="1">
-            </div>
-            <div class="input-group"><i class="fas fa-clock"></i>
-                <select name="timing" required>
-                    <option value="">Timing of measurement</option>
-                    <option value="Fasting">Fasting</option>
-                    <option value="Post-meal">Post-meal</option>
-                    <option value="Random">Random</option>
-                </select>
-            </div>
-            <div class="input-group"><i class="fas fa-user"></i>
-                <input type="number" name="age" placeholder="Age">
-            </div>
-            <div class="input-group"><i class="fas fa-venus-mars"></i>
-                <select name="gender">
-                    <option value="">Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div class="input-group"><i class="fas fa-ruler-vertical"></i>
-                <input type="number" name="height" placeholder="Height (cm)">
-            </div>
-            <div class="input-group"><i class="fas fa-weight"></i>
-                <input type="number" name="weight" placeholder="Weight (kg)">
-            </div>
-            <button type="submit">Get My AI Guidance</button>
-        </form>
+<div class="app">
+  <div class="logo">DiaSure AI</div>
+  <div class="subtitle">Smart diabetes guidance powered by AI</div>
 
-        {% if result %}
-        <div class="result">{{ result|safe }}</div>
-        {% endif %}
-
-        <div class="trust">🔒 <span>AI-Enhanced Guidance</span> • Educational • Not a Medical Diagnosis</div>
-    </div>
+  <input type="number" id="sugar" placeholder="Enter fasting sugar (mg/dL)">
+  <button onclick="getResult()">Give Results</button>
 </div>
 
-<footer>&copy; 2026 DiaSure AI — Educational guidance only. Not a substitute for professional care.</footer>
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="close" onclick="closeModal()">✕</div>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+function getResult() {
+  const sugar = document.getElementById("sugar").value;
+
+  fetch("/", {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: "sugar=" + sugar
+  })
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").innerHTML = data.result
+      .replace(/\*\*(.*?)\*\*/g, '<span class="heading">$1</span>')
+      .replace(/Disclaimer:/gi, '<span class="disclaimer">Disclaimer:</span>');
+    document.getElementById("modal").style.display = "flex";
+  });
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+</script>
+
 </body>
 </html>
