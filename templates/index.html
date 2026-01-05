@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiaSure AI — Diabetes Insight & Food Guidance</title>
+    <title>DiaSure AI — Diabetes Guidance Tool</title>
+    
+    <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #F9FAFB; color: #1F2937; }
+        body { background: #F3F6FB; color: #1F2937; }
 
-        .container {
-            max-width: 720px;
-            margin: 40px auto;
-            padding: 30px;
-        }
+        .container { max-width: 720px; margin: 50px auto; padding: 0 20px; }
 
         .card {
             background: #FFFFFF;
-            border-radius: 12px;
-            padding: 30px 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 15px;
+            padding: 35px 30px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             text-align: center;
             color: #2563EB;
@@ -35,56 +40,73 @@
             text-align: center;
             font-weight: 500;
             color: #4B5563;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             font-size: 1rem;
         }
 
-        label {
-            display: block;
-            font-weight: 600;
+        /* Input wrapper with icon */
+        .input-group {
+            position: relative;
             margin-top: 18px;
-            color: #374151;
         }
 
-        input, select, button {
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2563EB;
+            font-size: 1rem;
+        }
+
+        input, select {
             width: 100%;
-            padding: 12px 15px;
-            margin-top: 6px;
+            padding: 12px 15px 12px 40px;
             border-radius: 10px;
             border: 1px solid #D1D5DB;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         input:focus, select:focus {
-            border-color: #2563EB;
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
             outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
         }
 
+        /* Button */
         button {
-            background: #2563EB;
+            background: linear-gradient(90deg, #2563EB, #1E40AF);
             color: #fff;
             border: none;
             font-weight: 700;
-            margin-top: 24px;
+            margin-top: 25px;
+            padding: 13px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         button:hover {
-            background: #1E40AF;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
         }
 
+        /* Result box */
         .result {
-            margin-top: 28px;
+            margin-top: 30px;
             background: #E0F2FE;
             border-left: 5px solid #2563EB;
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 22px;
             font-size: 0.96rem;
             line-height: 1.55;
             color: #1E3A8A;
             white-space: pre-wrap;
+            animation: fadeIn 1s ease;
         }
 
         .trust {
@@ -101,58 +123,67 @@
 
         footer {
             text-align: center;
-            margin: 40px 0 15px;
+            margin: 45px 0 15px;
             font-size: 0.82rem;
             color: #9CA3AF;
         }
 
         @media (max-width: 480px) {
-            h1 { font-size: 1.6rem; }
+            h1 { font-size: 1.8rem; }
             .subtitle { font-size: 0.9rem; }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="card">
             <h1>DiaSure AI</h1>
             <p class="subtitle">
-                Get instant, accurate insight into your blood sugar — plus daily food guidance that helps you stay balanced.
+                Get instant, AI-powered insights into your blood sugar and personalized daily food guidance.
             </p>
 
             <form method="POST">
+                <div class="input-group">
+                    <i class="fas fa-droplet"></i>
+                    <input type="number" name="sugar" id="sugar" placeholder="Blood Sugar (mg/dL)" required min="1">
+                </div>
 
-                <label for="sugar">Blood Sugar Level (mg/dL)</label>
-                <input type="number" name="sugar" id="sugar" placeholder="e.g., 120" required min="1">
+                <div class="input-group">
+                    <i class="fas fa-clock"></i>
+                    <select name="timing" id="timing" required>
+                        <option value="">Timing of measurement</option>
+                        <option value="Fasting">Fasting</option>
+                        <option value="Post-meal">Post-meal</option>
+                        <option value="Random">Random</option>
+                    </select>
+                </div>
 
-                <label for="timing">When was this taken?</label>
-                <select name="timing" id="timing" required>
-                    <option value="">Select</option>
-                    <option value="Fasting">Fasting</option>
-                    <option value="Post-meal">Post-meal</option>
-                    <option value="Random">Random</option>
-                </select>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="number" name="age" id="age" placeholder="Age">
+                </div>
 
-                <label for="age">Your age</label>
-                <input type="number" name="age" id="age" placeholder="e.g., 45">
+                <div class="input-group">
+                    <i class="fas fa-venus-mars"></i>
+                    <select name="gender" id="gender">
+                        <option value="">Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
 
-                <label for="gender">Gender</label>
-                <select name="gender" id="gender">
-                    <option value="">Select</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
+                <div class="input-group">
+                    <i class="fas fa-ruler-vertical"></i>
+                    <input type="number" name="height" id="height" placeholder="Height (cm)">
+                </div>
 
-                <label for="height">Height (cm)</label>
-                <input type="number" name="height" id="height" placeholder="e.g., 170">
-
-                <label for="weight">Weight (kg)</label>
-                <input type="number" name="weight" id="weight" placeholder="e.g., 70">
+                <div class="input-group">
+                    <i class="fas fa-weight"></i>
+                    <input type="number" name="weight" id="weight" placeholder="Weight (kg)">
+                </div>
 
                 <button type="submit">Get My Insight + Guidance</button>
-
             </form>
 
             {% if result %}
