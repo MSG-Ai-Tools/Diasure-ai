@@ -1,138 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiaSure AI — Diabetes Guidance Tool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DiaSure AI — Diabetes Guidance Tool</title>
 
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: linear-gradient(135deg, #F3F6FB, #E0F2FE); color: #1F2937; min-height: 100vh; }
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background: linear-gradient(135deg, #F3F6FB, #E0F2FE); color: #1F2937; min-height: 100vh; }
 
-        .container { max-width: 750px; margin: 50px auto; padding: 0 20px; }
+.container { max-width: 750px; margin: 50px auto; padding: 0 20px; }
 
-        /* Creative DiaSure Title */
-        h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            text-align: center;
-            background: linear-gradient(90deg, #2563EB, #10B981, #F59E0B, #8B5CF6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGradient 4s ease infinite alternate;
-            margin-bottom: 5px;
-        }
-        @keyframes textGradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+/* DiaSure Title */
+h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    background: linear-gradient(90deg, #2563EB, #10B981, #F59E0B, #8B5CF6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGradient 4s ease infinite alternate;
+    margin-bottom: 5px;
+}
+@keyframes textGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
-        .subtitle { text-align: center; font-weight: 500; color: #374151; margin-bottom: 30px; font-size: 1rem; }
+.subtitle { text-align: center; font-weight: 500; color: #374151; margin-bottom: 30px; font-size: 1rem; }
 
-        .card {
-            background: #FFFFFF;
-            border-radius: 20px;
-            padding: 40px 35px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            animation: fadeIn 1s ease;
-        }
+.card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 40px 35px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+.input-group { position: relative; margin-top: 20px; }
+.input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #2563EB; font-size: 1rem; }
+input, select { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid #D1D5DB; font-size: 0.95rem; transition: all 0.3s ease; }
+input:focus, select:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); }
 
-        .input-group { position: relative; margin-top: 20px; }
-        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #2563EB; font-size: 1rem; }
-        input, select { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid #D1D5DB; font-size: 0.95rem; transition: all 0.3s ease; }
-        input:focus, select:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); }
+button {
+    background: linear-gradient(90deg, #2563EB, #10B981, #F59E0B);
+    color: #fff; border: none; font-weight: 700;
+    margin-top: 25px; padding: 15px; width: 100%; border-radius: 15px;
+    font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5); }
 
-        button {
-            background: linear-gradient(90deg, #2563EB, #10B981, #F59E0B);
-            color: #fff; border: none; font-weight: 700;
-            margin-top: 25px; padding: 15px; width: 100%; border-radius: 15px;
-            font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
-        }
-        button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5); }
+/* Result pop-up */
+.result {
+    margin-top: 30px; background: #FEF3C7; border-left: 6px solid #F59E0B;
+    border-radius: 12px; padding: 25px; font-size: 1rem; line-height: 1.6; color: #78350F;
+    white-space: pre-wrap;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.8s ease;
+}
 
-        /* Result pop-up */
-        .result {
-            margin-top: 30px; background: #FEF3C7; border-left: 6px solid #F59E0B;
-            border-radius: 12px; padding: 25px; font-size: 1rem; line-height: 1.6; color: #78350F;
-            white-space: pre-wrap; opacity: 0; transform: translateY(-20px); transition: all 0.8s ease;
-        }
-        .result.show { opacity: 1; transform: translateY(0); }
+.result.show {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 0 20px rgba(255, 184, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
+}
 
-        .trust { margin-top: 25px; text-align: center; font-size: 0.88rem; color: #6B7280; }
-        .trust span { font-weight: 600; color: #111827; }
+.trust { margin-top: 25px; text-align: center; font-size: 0.88rem; color: #6B7280; }
+.trust span { font-weight: 600; color: #111827; }
 
-        footer { text-align: center; margin: 50px 0 15px; font-size: 0.82rem; color: #9CA3AF; }
+footer { text-align: center; margin: 50px 0 15px; font-size: 0.82rem; color: #9CA3AF; }
 
-        @media (max-width: 480px) {
-            h1 { font-size: 2.2rem; }
-            .subtitle { font-size: 0.9rem; }
-        }
-    </style>
+@media (max-width: 480px) {
+    h1 { font-size: 2.2rem; }
+    .subtitle { font-size: 0.9rem; }
+}
+</style>
 
-    <script>
-        // Animate result popup after submit
-        function showResult() {
-            const res = document.querySelector('.result');
-            if(res) {
-                res.classList.add('show');
-            }
-        }
-    </script>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    const res = document.querySelector('.result');
+    if(res && res.innerHTML.trim() !== "") {
+        setTimeout(() => { res.classList.add('show'); }, 100);
+    }
+});
+</script>
 </head>
 <body>
-    <div class="container">
-        <h1>DiaSure</h1>
-        <p class="subtitle">AI-powered diabetes guidance & daily food tips for better sugar control.</p>
+<div class="container">
+    <h1>DiaSure</h1>
+    <p class="subtitle">AI-powered diabetes guidance & daily food tips for better sugar control.</p>
 
-        <div class="card">
-            <form method="POST" onsubmit="setTimeout(showResult, 100);">
-                <div class="input-group"><i class="fas fa-droplet"></i>
-                    <input type="number" name="sugar" placeholder="Blood Sugar (mg/dL)" required min="1">
-                </div>
-                <div class="input-group"><i class="fas fa-clock"></i>
-                    <select name="timing" required>
-                        <option value="">Timing of measurement</option>
-                        <option value="Fasting">Fasting</option>
-                        <option value="Post-meal">Post-meal</option>
-                        <option value="Random">Random</option>
-                    </select>
-                </div>
-                <div class="input-group"><i class="fas fa-user"></i>
-                    <input type="number" name="age" placeholder="Age">
-                </div>
-                <div class="input-group"><i class="fas fa-venus-mars"></i>
-                    <select name="gender">
-                        <option value="">Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="input-group"><i class="fas fa-ruler-vertical"></i>
-                    <input type="number" name="height" placeholder="Height (cm)">
-                </div>
-                <div class="input-group"><i class="fas fa-weight"></i>
-                    <input type="number" name="weight" placeholder="Weight (kg)">
-                </div>
-                <button type="submit">Get My AI Guidance</button>
-            </form>
+    <div class="card">
+        <form method="POST">
+            <div class="input-group"><i class="fas fa-droplet"></i>
+                <input type="number" name="sugar" placeholder="Blood Sugar (mg/dL)" required min="1">
+            </div>
+            <div class="input-group"><i class="fas fa-clock"></i>
+                <select name="timing" required>
+                    <option value="">Timing of measurement</option>
+                    <option value="Fasting">Fasting</option>
+                    <option value="Post-meal">Post-meal</option>
+                    <option value="Random">Random</option>
+                </select>
+            </div>
+            <div class="input-group"><i class="fas fa-user"></i>
+                <input type="number" name="age" placeholder="Age">
+            </div>
+            <div class="input-group"><i class="fas fa-venus-mars"></i>
+                <select name="gender">
+                    <option value="">Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="input-group"><i class="fas fa-ruler-vertical"></i>
+                <input type="number" name="height" placeholder="Height (cm)">
+            </div>
+            <div class="input-group"><i class="fas fa-weight"></i>
+                <input type="number" name="weight" placeholder="Weight (kg)">
+            </div>
+            <button type="submit">Get My AI Guidance</button>
+        </form>
 
-            {% if result %}
-            <div class="result">{{ result|safe }}</div>
-            {% endif %}
+        {% if result %}
+        <div class="result">{{ result|safe }}</div>
+        {% endif %}
 
-            <div class="trust">🔒 <span>AI-Enhanced Guidance</span> • Educational • Not a Medical Diagnosis</div>
-        </div>
+        <div class="trust">🔒 <span>AI-Enhanced Guidance</span> • Educational • Not a Medical Diagnosis</div>
     </div>
+</div>
 
-    <footer>&copy; 2026 DiaSure AI — Educational guidance only. Not a substitute for professional care.</footer>
+<footer>&copy; 2026 DiaSure AI — Educational guidance only. Not a substitute for professional care.</footer>
 </body>
 </html>
