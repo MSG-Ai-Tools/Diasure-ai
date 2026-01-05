@@ -1,72 +1,84 @@
 from flask import Flask, render_template, request
-from openai import OpenAI
 import os
+import openai
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Set your OpenAI API key as environment variable on Render or locally
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Medical disclaimer text
-MEDICAL_DISCLAIMER = (
-    "\n\nDisclaimer: This tool provides general diabetes guidance and food suggestions only. "
-    "It does not replace professional medical advice, diagnosis, or treatment. "
-    "Always consult your doctor for personal medical concerns."
-)
+# Disclaimer HTML
+MEDICAL_DISCLAIMER = "<strong style='color:red;'>Disclaimer:</strong> This tool provides general diabetes guidance and food suggestions only. It does not replace professional medical advice, diagnosis, or treatment. Always consult your doctor for personal medical concerns."
+
+def format_ai_response(ai_response_text):
+    """
+    Formats AI response:
+    - Tip headings bold and multi-colored
+    - Disclaimer bold red
+    - Output HTML-safe
+    """
+    lines = ai_response_text.split('\n')
+    formatted_lines = []
+    colors = ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#3B82F6']
+    color_index = 0
+
+    for line in lines:
+        line = line.strip()
+        # Check if line starts with a tip number
+        if line.startswith(tuple(str(i) for i in range(1, 10))) and ':' in line:
+            tip_num, rest = line.split(':', 1)
+            formatted_line = f"<strong style='color:{colors[color_index % len(colors)]};'>{tip_num}:</strong>{rest}"
+            color_index += 1
+        else:
+            formatted_line = line
+        formatted_lines.append(formatted_line)
+
+    # Add disclaimer
+    formatted_lines.append(MEDICAL_DISCLAIMER)
+    return "<br>".join(formatted_lines)
+
 
 @app.route("/", methods=["GET", "POST"])
 def tool():
+    result = None
     if request.method == "POST":
-        # Get form values safely
-        sugar = request.form.get("sugar", "").strip()
-        timing = request.form.get("timing", "").strip()
-        age = request.form.get("age", "").strip()
-        gender = request.form.get("gender", "").strip()
-        height = request.form.get("height", "").strip()
-        weight = request.form.get("weight", "").strip()
+        sugar = request.form.get("sugar")
+        timing = request.form.get("timing")
+        age = request.form.get("age")
+        gender = request.form.get("gender")
+        height = request.form.get("height")
+        weight = request.form.get("weight")
 
-        # Create prompt for AI
+        # Construct prompt for OpenAI
         prompt = f"""
-User sugar reading: {sugar}
-Timing: {timing}
-Age: {age}
-Gender: {gender}
-Height: {height} cm
-Weight: {weight} kg
+        You are a professional diabetes consultant AI. 
+        User data:
+        Blood Sugar: {sugar} mg/dL
+        Timing: {timing}
+        Age: {age}
+        Gender: {gender}
+        Height: {height} cm
+        Weight: {weight} kg
 
-Explain what this sugar level means in simple language and provide food guidance for today only.
-"""
+        1. Analyze the sugar value and timing.
+        2. Provide actionable food guidance tips numbered 1-6.
+        3. Each tip heading should be bold and in different color (we'll format it in HTML later).
+        4. Include a Disclaimer at the end.
+        """
 
-        # Call OpenAI API
         try:
-            ai_response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are a diabetes education assistant. "
-                            "You explain sugar readings and provide food guidance only. "
-                            "Do not give diagnosis or medication advice."
-                        ),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
+            ai_response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[{"role": "user", "content": prompt}],
                 temperature=0.3
             )
-
-            # Extract AI reply
-            reply = ai_response.choices[0].message.content + MEDICAL_DISCLAIMER
-
+            ai_text = ai_response.choices[0].message.content
+            # Format HTML response
+            result = format_ai_response(ai_text)
         except Exception as e:
-            reply = f"An error occurred while generating the guidance: {e}"
+            result = f"<strong style='color:red;'>Error:</strong> {str(e)}"
 
-        # Render result
-        return render_template("index.html", result=reply)
-
-    # GET request returns blank form
-    return render_template("index.html")
+    return render_template("index.html", result=result)
 
 
 if __name__ == "__main__":
