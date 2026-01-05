@@ -1,63 +1,73 @@
+from flask import Flask, render_template, request
 from openai import OpenAI
 import os
 
+# Initialize Flask app
+app = Flask(__name__)
+
+# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# Medical disclaimer text
 MEDICAL_DISCLAIMER = (
-    "⚠️ This tool provides educational information only and does not replace professional medical advice. "
-    "Always consult your healthcare provider."
+    "\n\nDisclaimer: This tool provides general diabetes guidance and food suggestions only. "
+    "It does not replace professional medical advice, diagnosis, or treatment. "
+    "Always consult your doctor for personal medical concerns."
 )
 
 @app.route("/", methods=["GET", "POST"])
 def tool():
-    response_text = ""
-
     if request.method == "POST":
-        fasting = request.form.get("fasting")
-        post_meal = request.form.get("post_meal")
-        age = request.form.get("age")
-        gender = request.form.get("gender")
-        height = request.form.get("height")
-        weight = request.form.get("weight")
-        sugars = request.form.get("sugars")
+        # Get form values safely
+        sugar = request.form.get("sugar", "").strip()
+        timing = request.form.get("timing", "").strip()
+        age = request.form.get("age", "").strip()
+        gender = request.form.get("gender", "").strip()
+        height = request.form.get("height", "").strip()
+        weight = request.form.get("weight", "").strip()
 
+        # Create prompt for AI
         prompt = f"""
-You are a calm, safe medical education assistant.
+User sugar reading: {sugar}
+Timing: {timing}
+Age: {age}
+Gender: {gender}
+Height: {height} cm
+Weight: {weight} kg
 
-User details:
-- Fasting sugar: {fasting}
-- Post-meal sugar: {post_meal}
-- Age: {age}
-- Gender: {gender}
-- Height (cm): {height}
-- Weight (kg): {weight}
-- Last 7 days sugar values: {sugars}
-
-Tasks:
-1. Explain what these sugar values usually indicate
-2. Calculate BMI from height and weight
-3. Identify trend from 7-day sugars
-4. Generate a simple 7-day diabetes-friendly diet plan
-5. Avoid diagnosis or medication changes
-6. Use reassuring tone
-7. Add medical disclaimer
+Explain what this sugar level means in simple language and provide food guidance for today only.
 """
 
-        ai_response = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": "You are a safe diabetes education assistant. You explain sugar readings and give food guidance only. You do not give medical treatment or diagnosis."},
-        {"role": "user", "content": prompt}
-    ],
-    temperature=0.3
-)
+        # Call OpenAI API
+        try:
+            ai_response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a diabetes education assistant. "
+                            "You explain sugar readings and provide food guidance only. "
+                            "Do not give diagnosis or medication advice."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.3
+            )
 
-reply = ai_response.choices[0].message.content
+            # Extract AI reply
+            reply = ai_response.choices[0].message.content + MEDICAL_DISCLAIMER
 
+        except Exception as e:
+            reply = f"An error occurred while generating the guidance: {e}"
 
-        reply = ai_response.choices[0].message.content + "\n\n" + MEDICAL_DISCLAIMER
+        # Render result
+        return render_template("index.html", result=reply)
 
-    return render_template("index.html", response=response_text)
+    # GET request returns blank form
+    return render_template("index.html")
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
