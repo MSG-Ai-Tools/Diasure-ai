@@ -1,10 +1,7 @@
-from flask import Flask, render_template, request
-import openai
+from openai import OpenAI
 import os
 
-app = Flask(__name__)
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 MEDICAL_DISCLAIMER = (
     "⚠️ This tool provides educational information only and does not replace professional medical advice. "
@@ -46,13 +43,19 @@ Tasks:
 7. Add medical disclaimer
 """
 
-        ai_response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.3
-        )
+        ai_response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "You are a safe diabetes education assistant. You explain sugar readings and give food guidance only. You do not give medical treatment or diagnosis."},
+        {"role": "user", "content": prompt}
+    ],
+    temperature=0.3
+)
 
-        response_text = ai_response.choices[0].message.content + "\n\n" + MEDICAL_DISCLAIMER
+reply = ai_response.choices[0].message.content
+
+
+        reply = ai_response.choices[0].message.content + "\n\n" + MEDICAL_DISCLAIMER
 
     return render_template("index.html", response=response_text)
 
