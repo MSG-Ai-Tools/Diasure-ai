@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DiaSure Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>DiaSure</h2>
+  <p>Welcome, {{ name }}</p>
+  <a href="/logout">Logout</a>
+</div>
+
+<div class="main">
+  <div class="card">
+    <h3>Enter Blood Sugar</h3>
+    <input id="sugar" type="number" placeholder="mg/dL">
+    <button onclick="analyze()">Get AI Guidance</button>
+  </div>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span onclick="closeModal()" class="close">×</span>
+    <div id="result"></div>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
