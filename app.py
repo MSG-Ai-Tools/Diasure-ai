@@ -4,7 +4,7 @@ import openai
 
 app = Flask(__name__)
 
-# Set your OpenAI API key as environment variable on Render or locally
+# Set your OpenAI API key as environment variable on Render
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Disclaimer HTML
@@ -33,10 +33,9 @@ def format_ai_response(ai_response_text):
             formatted_line = line
         formatted_lines.append(formatted_line)
 
-    # Add disclaimer
+    # Add disclaimer at the end
     formatted_lines.append(MEDICAL_DISCLAIMER)
     return "<br>".join(formatted_lines)
-
 
 @app.route("/", methods=["GET", "POST"])
 def tool():
@@ -62,7 +61,7 @@ def tool():
 
         1. Analyze the sugar value and timing.
         2. Provide actionable food guidance tips numbered 1-6.
-        3. Each tip heading should be bold and in different color (we'll format it in HTML later).
+        3. Each tip heading should be bold and different color (format in HTML later).
         4. Include a Disclaimer at the end.
         """
 
@@ -73,7 +72,6 @@ def tool():
                 temperature=0.3
             )
             ai_text = ai_response.choices[0].message.content
-            # Format HTML response
             result = format_ai_response(ai_text)
         except Exception as e:
             result = f"<strong style='color:red;'>Error:</strong> {str(e)}"
