@@ -1,37 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>DiaSure AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiaSure AI - Diabetes Guidance Tool</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial; background: #f4f6f8; padding: 30px; }
-        .box { background: white; padding: 20px; border-radius: 8px; max-width: 700px; margin: auto; }
-        input, textarea, button { width: 100%; padding: 10px; margin-top: 10px; }
-        button { background: #0b5ed7; color: white; border: none; }
-        pre { white-space: pre-wrap; background: #eef; padding: 15px; }
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #eef2f7; color: #1f2937; }
+
+        /* Container */
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        /* Title */
+        h1 {
+            text-align: center;
+            color: #2d6cdf;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        /* Form styling */
+        form label {
+            display: block;
+            margin-top: 18px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        form input, form select, form button {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 6px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            transition: all 0.2s ease-in-out;
+        }
+
+        form input:focus, form select:focus {
+            outline: none;
+            border-color: #2d6cdf;
+            box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.2);
+        }
+
+        /* Button */
+        form button {
+            background: linear-gradient(90deg, #2d6cdf, #1c4fa3);
+            color: #fff;
+            border: none;
+            margin-top: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        form button:hover {
+            background: linear-gradient(90deg, #1c4fa3, #164081);
+        }
+
+        /* Result box */
+        .result {
+            margin-top: 30px;
+            background: #e0f2fe;
+            border-left: 5px solid #2d6cdf;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #1e3a8a;
+        }
+
+        /* Trust badge */
+        .trust {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .trust span {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>DiaSure AI</h1>
+        <p style="text-align:center; color:#374151; margin-bottom:20px;">
+            Get instant, personalized diabetes guidance and food recommendations. Safe, trusted, and backed by AI technology.
+        </p>
 
-<div class="box">
-<h2>AI Diabetes Assistant</h2>
+        <form method="POST">
+            <label for="sugar">Blood Sugar Level (mg/dL)</label>
+            <input type="number" name="sugar" id="sugar" placeholder="e.g., 110" required min="1">
 
-<form method="post">
-    <input name="fasting" placeholder="Fasting Sugar (mg/dL)" required>
-    <input name="post_meal" placeholder="Post-meal Sugar (mg/dL)" required>
-    <input name="age" placeholder="Age" required>
-    <input name="gender" placeholder="Gender" required>
-    <input name="height" placeholder="Height (cm)" required>
-    <input name="weight" placeholder="Weight (kg)" required>
-    <textarea name="sugars" placeholder="Enter last 7 days sugar values (comma separated)" required></textarea>
-    <button type="submit">Generate My Plan</button>
-</form>
+            <label for="timing">Timing</label>
+            <select name="timing" id="timing" required>
+                <option value="">Select</option>
+                <option value="Fasting">Fasting</option>
+                <option value="Post-meal">Post-meal</option>
+                <option value="Random">Random</option>
+            </select>
 
-{% if response %}
-<h3>Your AI Guidance</h3>
-<pre>{{ response }}</pre>
-{% endif %}
+            <label for="age">Age</label>
+            <input type="number" name="age" id="age" placeholder="e.g., 45" min="1">
 
-</div>
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
 
+            <label for="height">Height (cm)</label>
+            <input type="number" name="height" id="height" placeholder="e.g., 170" min="1">
+
+            <label for="weight">Weight (kg)</label>
+            <input type="number" name="weight" id="weight" placeholder="e.g., 70" min="1">
+
+            <button type="submit">Get My Guidance</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            {{ result }}
+        </div>
+        {% endif %}
+
+        <div class="trust">
+            <p>🔒 Safe & Secure | AI-Powered | <span>Trusted Guidance Only</span></p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 DiaSure AI. This tool provides educational guidance and is not a substitute for professional medical advice.
+    </footer>
 </body>
 </html>
