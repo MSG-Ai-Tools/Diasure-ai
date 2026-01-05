@@ -4,19 +4,12 @@ import openai
 
 app = Flask(__name__)
 
-# Set your OpenAI API key as environment variable on Render
+# Make sure you set your OPENAI_API_KEY as environment variable on Render
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Disclaimer HTML
 MEDICAL_DISCLAIMER = "<strong style='color:red;'>Disclaimer:</strong> This tool provides general diabetes guidance and food suggestions only. It does not replace professional medical advice, diagnosis, or treatment. Always consult your doctor for personal medical concerns."
 
 def format_ai_response(ai_response_text):
-    """
-    Formats AI response:
-    - Tip headings bold and multi-colored
-    - Disclaimer bold red
-    - Output HTML-safe
-    """
     lines = ai_response_text.split('\n')
     formatted_lines = []
     colors = ['#2563EB', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444', '#3B82F6']
@@ -24,7 +17,6 @@ def format_ai_response(ai_response_text):
 
     for line in lines:
         line = line.strip()
-        # Check if line starts with a tip number
         if line.startswith(tuple(str(i) for i in range(1, 10))) and ':' in line:
             tip_num, rest = line.split(':', 1)
             formatted_line = f"<strong style='color:{colors[color_index % len(colors)]};'>{tip_num}:</strong>{rest}"
@@ -33,7 +25,6 @@ def format_ai_response(ai_response_text):
             formatted_line = line
         formatted_lines.append(formatted_line)
 
-    # Add disclaimer at the end
     formatted_lines.append(MEDICAL_DISCLAIMER)
     return "<br>".join(formatted_lines)
 
@@ -48,7 +39,6 @@ def tool():
         height = request.form.get("height")
         weight = request.form.get("weight")
 
-        # Construct prompt for OpenAI
         prompt = f"""
         You are a professional diabetes consultant AI. 
         User data:
@@ -66,12 +56,13 @@ def tool():
         """
 
         try:
-            ai_response = openai.ChatCompletion.create(
+            # ✅ New OpenAI API v1 syntax
+            ai_response = openai.chat.completions.create(
                 model="gpt-4",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.3
             )
-            ai_text = ai_response.choices[0].message.content
+            ai_text = ai_response.choices[0].message["content"]
             result = format_ai_response(ai_text)
         except Exception as e:
             result = f"<strong style='color:red;'>Error:</strong> {str(e)}"
